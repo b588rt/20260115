@@ -1,0 +1,36 @@
+Sub HighlightAndTableCleanup()
+
+    Dim ws As Worksheet
+    Dim rngHeader As Range
+    Dim cell As Range
+    Dim targetCol As Long
+    Dim lastRow As Long
+    Dim i As Long
+    
+    Set ws = ThisWorkbook.Sheets("工作表1")
+    
+    Set rngHeader = ws.Range("A1:Z1")
+    
+    For Each cell In rngHeader
+
+        If cell.Value = "狀態情形" Then
+
+            'cell.Interior.Color = vbYellow
+            
+            targetCol = cell.Column
+            
+            lastRow = ws.Cells(ws.Rows.Count, targetCol).End(xlUp).Row
+            
+            For i = lastRow To 1 Step -1
+
+                If ws.Cells(i, targetCol).Value Like "*事件*" Then
+                    ws.Rows(i).Delete
+
+                End If
+            Next i
+        End If
+    Next cell
+    
+End Sub
+
+
