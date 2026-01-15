@@ -1,0 +1,54 @@
+
+
+
+
+Sub DeleteDetailSheets()
+
+    Dim targetPath As String
+    Dim wbTarget As Workbook
+    Dim ws As Worksheet
+    Dim i As Integer
+    Dim sheetCount As Integer
+    
+    targetPath = "E:\0116.xlsm"
+    
+    On Error Resume Next
+    Set wbTarget = Workbooks("0116.xlsm")
+    If wbTarget Is Nothing Then
+        If Dir(targetPath) <> "" Then
+            Set wbTarget = Workbooks.Open(targetPath)
+        
+         Else
+
+            Exit Sub
+        End If
+    End If
+    On Error GoTo 0
+    
+
+    Application.DisplayAlerts = False
+    
+
+    sheetCount = wbTarget.Worksheets.Count
+    For i = sheetCount To 1 Step -1
+        Set ws = wbTarget.Worksheets(i)
+        
+
+        If InStr(ws.Name, "明細") > 0 Then
+
+            If wbTarget.Worksheets.Count > 1 Then
+                ws.Delete
+            Else
+
+            End If
+        End If
+    Next i
+    
+
+    Application.DisplayAlerts = True
+    
+    
+     
+     wbTarget.Save
+     
+End Sub
