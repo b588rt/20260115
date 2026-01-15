@@ -1,0 +1,69 @@
+
+Sub CopyTodayLatestDetailSheetA()
+
+    Dim downloadPath As String
+    Dim fileName As String
+    Dim latestFile As String
+    Dim latestDate As Date
+    Dim currentFileDate As Date
+    Dim targetPath As String
+    Dim wbSource As Workbook
+    Dim wbTarget As Workbook
+    Dim foundTodayFile As Boolean
+    
+    downloadPath = Environ("USERPROFILE") & "\Downloads\"
+    targetPath = "E:\0116.xlsm"
+    foundTodayFile = False
+    
+    fileName = Dir(downloadPath & "*明細*.xls*")
+    
+    Do While fileName <> ""
+        currentFileDate = FileDateTime(downloadPath & fileName)
+        
+        If Int(currentFileDate) = Date Then
+            foundTodayFile = True
+
+            If currentFileDate > latestDate Then
+                latestDate = currentFileDate
+                latestFile = fileName
+            End If
+        End If
+        
+        fileName = Dir 
+    Loop
+    
+    If Not foundTodayFile Then
+
+        Exit Sub
+
+    End If
+    
+    On Error Resume Next
+    Set wbTarget = Workbooks("0116.xlsm")
+    If wbTarget Is Nothing Then
+        If Dir(targetPath) <> "" Then
+            Set wbTarget = Workbooks.Open(targetPath)
+        Else
+            Exit Sub
+        End If
+    End If
+    On Error GoTo 0
+    
+    Set wbSource = Workbooks.Open(downloadPath & latestFile)
+    
+    On Error Resume Next
+
+    wbSource.Worksheets("明細").Copy After:=wbTarget.Sheets(wbTarget.Sheets.Count)
+    
+    If Err.Number <> 0 Then
+
+    Else
+
+    End If
+
+    On Error GoTo 0
+    
+    wbSource.Close SaveChanges:=False
+
+End Sub
+
