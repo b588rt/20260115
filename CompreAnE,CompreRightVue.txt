@@ -1,0 +1,42 @@
+Sub CompareCells()
+
+ 
+    Dim ws As Worksheet
+    Dim i As Long
+    Dim foundCell As Range
+    Dim searchRange As Range
+    
+    Set ws = ThisWorkbook.Worksheets("Total")
+ 
+    Set searchRange = ws.Range("E2:E500")
+    
+ 
+    ws.Range("A2:B500, E2:EC500").Interior.ColorIndex = xlNone
+    
+    For i = 2 To 500
+ 
+        If ws.Cells(i, "A").Value <> "" And ws.Cells(i, "A").Value <> "(空白)" And ws.Cells(i, "A").Value <> "總計" Then
+            
+ 
+            Set foundCell = searchRange.Find(What:=ws.Cells(i, "A").Value, LookIn:=xlValues, LookAt:=xlWhole)
+            
+            If Not foundCell Is Nothing Then
+ 
+                If ws.Cells(i, "B").Value <> ws.Cells(foundCell.Row, "F").Value Then
+ 
+                    ws.Cells(i, "B").Interior.Color = vbYellow
+                    ws.Cells(i, "A").Interior.Color = vbYellow  '-------
+                    ws.Cells(foundCell.Row, "F").Interior.Color = vbYellow
+                    ws.Cells(foundCell.Row, "E").Interior.Color = vbYellow   '-------
+                End If
+            Else
+ 
+                ws.Cells(i, "A").Interior.Color = vbYellow
+                ws.Cells(i, "B").Interior.Color = vbYellow
+            End If
+            
+        End If
+    Next i
+    
+ 
+End Sub
