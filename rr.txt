@@ -1,0 +1,61 @@
+
+
+Sub CompareCells()
+
+    Dim ws As Worksheet
+    Dim i As Long, lastRowA As Long, lastRowE As Long
+    Dim foundCell As Range
+    Dim searchRangeA As Range, searchRangeE As Range
+    
+    Set ws = ThisWorkbook.Worksheets("Total6")
+    
+    
+    lastRowA = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
+    lastRowE = ws.Cells(ws.Rows.Count, "E").End(xlUp).Row
+    
+   
+    Set searchRangeA = ws.Range("A2:A" & lastRowA)
+    Set searchRangeE = ws.Range("E2:E" & lastRowE)
+    
+   
+    ws.Range("A2:B" & lastRowA).Interior.ColorIndex = xlNone
+    ws.Range("E2:F" & lastRowE).Interior.ColorIndex = xlNone
+    
+   
+    For i = 2 To lastRowA
+        If ws.Cells(i, "A").Value <> "" And ws.Cells(i, "A").Value <> "(空白)" And ws.Cells(i, "A").Value <> "總計" Then
+            
+            Set foundCell = searchRangeE.Find(What:=ws.Cells(i, "A").Value, LookIn:=xlValues, LookAt:=xlWhole)
+            
+            If Not foundCell Is Nothing Then
+               
+                If ws.Cells(i, "B").Value <> ws.Cells(foundCell.Row, "F").Value Then
+                    ws.Cells(i, "A").Interior.Color = vbYellow
+                    ws.Cells(i, "B").Interior.Color = vbYellow
+                    ws.Cells(foundCell.Row, "E").Interior.Color = vbYellow
+                    ws.Cells(foundCell.Row, "F").Interior.Color = vbYellow
+                End If
+            Else
+               
+                ws.Cells(i, "A").Interior.Color = vbYellow
+                ws.Cells(i, "B").Interior.Color = vbYellow
+            End If
+        End If
+    Next i
+    
+    '  E  A 
+    For i = 2 To lastRowE
+        If ws.Cells(i, "E").Value <> "" And ws.Cells(i, "E").Value <> "(空白)" And ws.Cells(i, "E").Value <> "總計" Then
+            
+            Set foundCell = searchRangeA.Find(What:=ws.Cells(i, "E").Value, LookIn:=xlValues, LookAt:=xlWhole)
+            
+          
+            If foundCell Is Nothing Then
+                ws.Cells(i, "E").Interior.Color = vbCyan
+                ws.Cells(i, "F").Interior.Color = vbCyan
+            End If
+        End If
+    Next i
+    
+
+End Sub
