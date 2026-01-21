@@ -23,7 +23,7 @@ Sub CompareAndDeleteRows()
         Exit Sub
     End If
     
-    For colXuehao = 1 To 26 ' A到Z欄
+    For colXuehao = 1 To 26 
         If InStr(1, ws3.Cells(1, colXuehao).Value, "學號h") > 0 Then
             ws3.Cells(1, colXuehao).Interior.Color = RGB(0, 255, 0) 
             Exit For
@@ -75,4 +75,5 @@ Function ColLetter(colNumber As Long) As String
     vArr = Split(Cells(1, colNumber).Address(True, False), "$")
     ColLetter = vArr(0)
 End Function
+
 
