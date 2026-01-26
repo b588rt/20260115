@@ -1,0 +1,121 @@
+Sub ProcessDepartmentDataArray()
+
+    Dim ws As Worksheet
+    Dim targetRange As Range
+    Dim colNum As Long, lastRow As Long
+    Dim dataArr As Variant
+    Dim i As Long
+    
+    Set ws = ThisWorkbook.Worksheets("工作表3")
+    
+    
+    Set targetRange = ws.Range("A1:Z1").Find(What:="系別3h", LookIn:=xlValues, LookAt:=xlWhole)
+    
+    If targetRange Is Nothing Then Exit Sub
+    
+    colNum = targetRange.Column
+    targetRange.Interior.Color = RGB(0, 255, 0)
+    
+    lastRow = ws.Cells(ws.Rows.Count, colNum).End(xlUp).Row
+    If lastRow < 2 Then Exit Sub
+    
+    dataArr = ws.Range(ws.Cells(2, colNum), ws.Cells(lastRow, colNum + 1)).Value
+    
+    For i = 1 To UBound(dataArr, 1)
+        If InStr(CStr(dataArr(i, 1)), "數學組別L") > 0 Then
+            Dim currentStr As String
+
+            currentStr = CStr(dataArr(i, 2))
+            
+            If Len(currentStr) > 0 Then
+
+                dataArr(i, 2) = Mid(currentStr, 2)
+            End If
+        End If
+    Next i
+    
+    With ws.Cells(2, colNum + 1).Resize(UBound(dataArr, 1), 1)
+        .NumberFormat = "@" 
+
+        Dim resultArr As Variant
+        ReDim resultArr(1 To UBound(dataArr, 1), 1 To 1)
+        For i = 1 To UBound(dataArr, 1)
+            resultArr(i, 1) = dataArr(i, 2)
+        Next i
+        
+        .Value = resultArr
+    End With
+    
+   
+End Sub
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+
+
+Sub DataArray_DeleteTwoChars()
+
+    Dim ws As Worksheet
+    Dim targetRange As Range
+    Dim colNum As Long, lastRow As Long
+    Dim dataArr As Variant, resultArr As Variant
+    Dim i As Long
+    Dim currentStr As String
+    
+   
+    Set ws = ThisWorkbook.Worksheets("工作表3")
+    
+ 
+    Set targetRange = ws.Range("A1:Z1").Find(What:="系別3h", LookIn:=xlValues, LookAt:=xlWhole)
+    
+    If targetRange Is Nothing Then
+     
+        Exit Sub
+
+    End If
+    
+ 
+    colNum = targetRange.Column
+    targetRange.Interior.Color = RGB(0, 255, 0)
+    
+  
+    lastRow = ws.Cells(ws.Rows.Count, colNum).End(xlUp).Row
+    If lastRow < 2 Then Exit Sub
+    
+   
+    dataArr = ws.Range(ws.Cells(2, colNum), ws.Cells(lastRow, colNum + 1)).Value
+    
+ 
+    ReDim resultArr(1 To UBound(dataArr, 1), 1 To 1)
+    
+  
+    For i = 1 To UBound(dataArr, 1)
+     
+        resultArr(i, 1) = dataArr(i, 2)
+        
+     
+        If InStr(CStr(dataArr(i, 1)), "數學組L") > 0 Then
+            currentStr = CStr(dataArr(i, 2))
+            
+     
+            If Len(currentStr) >= 2 Then
+
+                resultArr(i, 1) = Mid(currentStr, 3)  'delete 3 bit
+            Else
+  
+                resultArr(i, 1) = ""
+            End If
+        End If
+    Next i
+    
+  
+    With ws.Cells(2, colNum + 1).Resize(UBound(resultArr, 1), 1)
+        .NumberFormat = "@"  
+        .Value = resultArr   
+    End With
+    
+ 
+
+End Sub
+
