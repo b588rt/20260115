@@ -1,0 +1,47 @@
+
+Sub ProcessLargeData_TimeColumn()
+
+    Dim ws As Worksheet
+    Dim timeRange As Range
+    Dim timeCol As Integer
+    Dim lastRow As Long
+    Dim lastCol As Integer
+    Dim dataRange As Range
+    
+    
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+    Application.EnableEvents = False
+    
+    On Error GoTo CleanUp 
+    
+    Set ws = ThisWorkbook.Sheets("工作表3")
+    
+    Set timeRange = ws.Range("A1:Z1").Find(What:="時間", LookIn:=xlValues, LookAt:=xlPart)
+    
+    If Not timeRange Is Nothing Then
+        timeCol = timeRange.Column
+        timeRange.Interior.Color = RGB(0, 255, 0)
+        
+        lastRow = ws.Cells(ws.Rows.Count, timeCol).End(xlUp).Row
+        lastCol = ws.Cells(1, ws.Columns.Count).End(xlToLeft).Column
+        
+        If lastRow > 1 Then
+            Set dataRange = ws.Range(ws.Cells(1, 1), ws.Cells(lastRow, lastCol))
+            
+            dataRange.RemoveDuplicates Columns:=timeCol, Header:=xlYes
+            
+        End If
+    Else
+
+    End If
+
+CleanUp:
+
+    Application.ScreenUpdating = True
+    Application.Calculation = xlCalculationAutomatic
+    Application.EnableEvents = True
+    
+    If Err.Number <> 0 Then MsgBox " Error" & Err.Description
+
+End Sub
